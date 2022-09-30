@@ -69,6 +69,12 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   if (loadDefaults) {
     loadFromSystemProperties(false)
   }
+  //For CTest
+  private[spark] def getStackTrace(): String = {
+    var stackTrace = " "
+    for (e <- Thread.currentThread().getStackTrace()) stackTrace = stackTrace.concat(e.getClassName() + "\t")
+    stackTrace
+  }
 
   private[spark] def loadFromSystemProperties(silent: Boolean): SparkConf = {
     // Load any spark.* system properties
@@ -94,6 +100,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       logDeprecationWarning(key)
     }
     settings.put(key, value)
+    println("[CTEST][GET-PARAM] " + getStackTrace())
     this
   }
 
@@ -385,6 +392,14 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 
   /** Get a parameter as an Option */
   def getOption(key: String): Option[String] = {
+    // String param = key
+    // if (settings.get(key) != null) {
+    //   param = key
+    // }
+    // else {
+    //   param = getDeprecatedConfig(key, settings)
+    // }
+    println("[CTEST][GET-PARAM] " + key)
     Option(settings.get(key)).orElse(getDeprecatedConfig(key, settings))
   }
 
