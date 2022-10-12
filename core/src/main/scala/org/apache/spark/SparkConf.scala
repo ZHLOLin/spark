@@ -100,7 +100,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       logDeprecationWarning(key)
     }
     settings.put(key, value)
-    println("[CTEST][GET-PARAM] " + getStackTrace())
+    println("[CTEST][SET-PARAM] " + key + getStackTrace())
     this
   }
 
