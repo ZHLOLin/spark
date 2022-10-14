@@ -17,6 +17,9 @@
 
 package org.apache.spark
 
+import java.io.FileWriter
+import java.io.BufferedWriter
+import java.io.File
 import java.util.{Map => JMap}
 import java.util.concurrent.ConcurrentHashMap
 
@@ -59,6 +62,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   def this() = this(true)
 
   private val settings = new ConcurrentHashMap[String, String]()
+  private val file = new File("../target/surefire-reports/hello.txt")
+  private val bw = new BufferedWriter(new FileWriter(file, true))
 
   @transient private lazy val reader: ConfigReader = {
     val _reader = new ConfigReader(new SparkConfigProvider(settings))
@@ -69,10 +74,11 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   if (loadDefaults) {
     loadFromSystemProperties(false)
   }
-  //For CTest
+  // For CTest
   private[spark] def getStackTrace(): String = {
     var stackTrace = " "
-    for (e <- Thread.currentThread().getStackTrace()) stackTrace = stackTrace.concat(e.getClassName() + "\t")
+    for (e <- Thread.currentThread().getStackTrace())
+      stackTrace = stackTrace.concat(e.getClassName() + "\t")
     stackTrace
   }
 
@@ -100,7 +106,10 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       logDeprecationWarning(key)
     }
     settings.put(key, value)
-    println("[CTEST][SET-PARAM] " + key + getStackTrace())
+    // scalastyle:off println
+    Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())
+    // bw.write("[CTEST][SET-PARAM] " + key + getStackTrace() + "\n")
+    // bw.flush()
     this
   }
 
@@ -265,7 +274,9 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
    * - This will throw an exception is the config is not optional and the value is not set.
    */
   private[spark] def get[T](entry: ConfigEntry[T]): T = {
-    entry.readFrom(reader)
+    val value = entry.readFrom(reader)
+    Console.println("[CTEST][GET-PARAM] " + entry.key) 
+    value
   }
 
   /**
@@ -399,7 +410,10 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     // else {
     //   param = getDeprecatedConfig(key, settings)
     // }
-    println("[CTEST][GET-PARAM] " + key)
+    // scalastyle:off println
+    Console.println("[CTEST][GET-PARAM] " + key) 
+    // bw.write("[CTEST][GET-PARAM] " + key + "\n")
+    // bw.flush()
     Option(settings.get(key)).orElse(getDeprecatedConfig(key, settings))
   }
 
