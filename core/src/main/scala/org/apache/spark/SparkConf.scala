@@ -17,9 +17,6 @@
 
 package org.apache.spark
 
-import java.io.FileWriter
-import java.io.BufferedWriter
-import java.io.File
 import java.util.{Map => JMap}
 import java.util.concurrent.ConcurrentHashMap
 
@@ -62,8 +59,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   def this() = this(true)
 
   private val settings = new ConcurrentHashMap[String, String]()
-  private val file = new File("../target/surefire-reports/hello.txt")
-  private val bw = new BufferedWriter(new FileWriter(file, true))
 
   @transient private lazy val reader: ConfigReader = {
     val _reader = new ConfigReader(new SparkConfigProvider(settings))
@@ -108,8 +103,6 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     settings.put(key, value)
     // scalastyle:off println
     Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())
-    // bw.write("[CTEST][SET-PARAM] " + key + getStackTrace() + "\n")
-    // bw.flush()
     this
   }
 
@@ -403,17 +396,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 
   /** Get a parameter as an Option */
   def getOption(key: String): Option[String] = {
-    // String param = key
-    // if (settings.get(key) != null) {
-    //   param = key
-    // }
-    // else {
-    //   param = getDeprecatedConfig(key, settings)
-    // }
     // scalastyle:off println
     Console.println("[CTEST][GET-PARAM] " + key) 
-    // bw.write("[CTEST][GET-PARAM] " + key + "\n")
-    // bw.flush()
     Option(settings.get(key)).orElse(getDeprecatedConfig(key, settings))
   }
 
