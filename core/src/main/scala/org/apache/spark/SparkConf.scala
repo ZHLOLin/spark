@@ -267,9 +267,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
    * - This will throw an exception is the config is not optional and the value is not set.
    */
   private[spark] def get[T](entry: ConfigEntry[T]): T = {
-    val value = entry.readFrom(reader)
-    Console.println("[CTEST][GET-PARAM] " + entry.key) 
-    value
+    entry.readFrom(reader)
   }
 
   /**
