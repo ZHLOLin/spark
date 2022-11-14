@@ -184,6 +184,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
 
   /** Set a parameter if it isn't already configured */
   def setIfMissing(key: String, value: String): SparkConf = {
+    // scalastyle:off println
+    Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())
     if (settings.putIfAbsent(key, value) == null) {
       logDeprecationWarning(key)
     }
@@ -191,6 +193,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   }
 
   private[spark] def setIfMissing[T](entry: ConfigEntry[T], value: T): SparkConf = {
+    // scalastyle:off println
+    Console.println("[CTEST][SET-PARAM] " + entry.key + getStackTrace())
     if (settings.putIfAbsent(entry.key, entry.stringConverter(value)) == null) {
       logDeprecationWarning(entry.key)
     }
@@ -198,6 +202,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   }
 
   private[spark] def setIfMissing[T](entry: OptionalConfigEntry[T], value: T): SparkConf = {
+    // scalastyle:off println
+    Console.println("[CTEST][SET-PARAM] " + entry.key + getStackTrace())
     if (settings.putIfAbsent(entry.key, entry.rawStringConverter(value)) == null) {
       logDeprecationWarning(entry.key)
     }
@@ -267,6 +273,8 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
    * - This will throw an exception is the config is not optional and the value is not set.
    */
   private[spark] def get[T](entry: ConfigEntry[T]): T = {
+    // scalastyle:off println
+    Console.println("[CTEST][GET-PARAM] " + entry.key) 
     entry.readFrom(reader)
   }
 
