@@ -102,7 +102,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     }
     settings.put(key, value)
     // scalastyle:off println
-    Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())
+    Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())  //CTest
     this
   }
 
@@ -274,7 +274,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
    */
   private[spark] def get[T](entry: ConfigEntry[T]): T = {
     // scalastyle:off println
-    Console.println("[CTEST][GET-PARAM] " + entry.key) 
+    Console.println("[CTEST][GET-PARAM] " + entry.key) //CTest
     entry.readFrom(reader)
   }
 
@@ -403,7 +403,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   /** Get a parameter as an Option */
   def getOption(key: String): Option[String] = {
     // scalastyle:off println
-    Console.println("[CTEST][GET-PARAM] " + key) 
+    Console.println("[CTEST][GET-PARAM] " + key) //CTest
     Option(settings.get(key)).orElse(getDeprecatedConfig(key, settings))
   }
 
