@@ -80,7 +80,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
   private[spark] def loadFromSystemProperties(silent: Boolean): SparkConf = {
     // Load any spark.* system properties
     for ((key, value) <- Utils.getSystemProperties if key.startsWith("spark.")) {
-      set(key, value, silent)
+      set(key, value, silent, false)
     }
     this
   }
@@ -90,7 +90,7 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
     set(key, value, false)
   }
 
-  private[spark] def set(key: String, value: String, silent: Boolean): SparkConf = {
+  private[spark] def set(key: String, value: String, silent: Boolean, ctest: Boolean = true): SparkConf = {
     if (key == null) {
       throw new NullPointerException("null key")
     }
@@ -101,8 +101,9 @@ class SparkConf(loadDefaults: Boolean) extends Cloneable with Logging with Seria
       logDeprecationWarning(key)
     }
     settings.put(key, value)
-    // scalastyle:off println
-    Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())  //CTest
+    if ctest:
+      // scalastyle:off println
+      Console.println("[CTEST][SET-PARAM] " + key + getStackTrace())  //CTest
     this
   }
 
